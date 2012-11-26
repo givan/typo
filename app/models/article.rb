@@ -417,18 +417,39 @@ class Article < Content
   end
 
   def merge_with(source_article) 
-
     if source_article
-        self.body = "#{self.body}. #{source_article.body}"
-        self.save!()
 
-        take_comments(source_article)
+			self.body = "#{self.body}#{source_article.body}"
+      self.save!
+
+  #      merged_article = new
+
+  #      merged_article.title = self.title
+	#			merged_article.type = self.type
+  #      merged_article.author = self.author
+  #      merged_article.body = "#{self.body}#{source_article.body}"
+  #      merged_article.excerpt = self.excerpt
+	#			merged_article.user_id = self.user_id
+	#			merged_article.guid = self.guid
+	#			merged_article.text_filter_id = self.text_filter_id
+	#			merged_article.whiteboard = self.whiteboard
+	#			merged_article.name = self.name
+	#			merged_article.published = self.published
+		#		merged_article.allow_pings = self.allow_pings
+			#	merged_article.allow_comments = self.allow_comments
+		#		merged_article.state = self.state
+		#		merged_article.settings = self.settings
+		#		merged_article.post_type = self.post_type
+    #    merged_article.save!
+
+        #merged_article.take_comments(self)
+        #merged_article.take_comments(source_article)
+				self.take_comments(source_article)
 
         source_article.delete()
+        #self.delete()
     end
   end
-
-  protected
 
   def take_comments(source_article)
   	source_article.comments.each do |comment|
@@ -436,6 +457,8 @@ class Article < Content
        comment.save!()
     end
   end
+
+  protected
 
   def set_published_at
     if self.published and self[:published_at].nil?
