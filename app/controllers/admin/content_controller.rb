@@ -52,6 +52,30 @@ class Admin::ContentController < Admin::BaseController
     redirect_to :action => 'index'
   end
 
+
+  def merge
+
+    if current_user.admin? then
+     article = Article.find(params[:id])
+     merge_with_id = params[:merge][:with]
+     
+     if article then
+         merge_article = Article.find(merge_with_id)
+         if (merge_article)
+            article.merge_with(merge_article)
+         else
+            flash[:error] = "The merge with article with id #{merge_with_id} doesn't exist"
+         end
+      else
+         flash[:error] = "The article with id=#{id} does not exist"
+      end    
+    else
+      flash[:error] = _('Only administrators can merge articles.')
+    end
+    
+    redirect_to :action => 'index'
+  end
+
   def insert_editor
     editor = 'visual'
     editor = 'simple' if params[:editor].to_s == 'simple'
@@ -139,7 +163,7 @@ class Admin::ContentController < Admin::BaseController
 
   def real_action_for(action); { 'add' => :<<, 'remove' => :delete}[action]; end
 
-  def new_or_edit
+  def new_or_edit 
     id = params[:id]
     id = params[:article][:id] if params[:article] && params[:article][:id]
     @article = Article.get_or_build_article(id)

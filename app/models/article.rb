@@ -416,7 +416,26 @@ class Article < Content
     user.admin? || user_id == user.id
   end
 
+  def merge_with(source_article) 
+
+    if source_article
+        self.body = "#{self.body}. #{source_article.body}"
+        self.save!()
+
+        take_comments(source_article)
+
+        source_article.delete()
+    end
+  end
+
   protected
+
+  def take_comments(source_article)
+  	source_article.comments.each do |comment|
+       comment.article_id = id
+       comment.save!()
+    end
+  end
 
   def set_published_at
     if self.published and self[:published_at].nil?
