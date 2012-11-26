@@ -62,7 +62,11 @@ class Admin::ContentController < Admin::BaseController
      if article then
          merge_article = Article.find(merge_with_id)
          if (merge_article)
-            article.merge_with(merge_article)
+            if (merge_article.id != article.id)
+               article.merge_with(merge_article)
+            else
+               flash[:error] = "Cannot merge article with itself!"
+            end
          else
             flash[:error] = "The merge with article with id #{merge_with_id} doesn't exist"
          end
