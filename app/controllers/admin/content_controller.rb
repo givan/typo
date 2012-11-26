@@ -56,8 +56,9 @@ class Admin::ContentController < Admin::BaseController
   def merge
 
     if current_user.admin? then
+     debugger
      article = Article.find(params[:id])
-     merge_with_id = params[:merge][:with]
+     merge_with_id = params[:merge_with]
      
      if article then
          merge_article = Article.find(merge_with_id)
